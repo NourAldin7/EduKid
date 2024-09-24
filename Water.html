@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="Assets/CSS/bootstrap.min.css">
+        <link rel="stylesheet" href="Assets/CSS/fonts.css">
+        <link rel="stylesheet" href="Assets/CSS/royalslider.css">
+        <link rel="stylesheet" id="packed-styles-css" href="Assets/CSS/__packed.css" type="text/css" media="all">
+        <link rel="stylesheet" href="Assets/CSS/main_style.css">
+        <link rel="stylesheet" href="Assets/CSS/footer.css">
+        <link rel="stylesheet" id="theme-skin-css" href="Assets/CSS/kinder.css" type="text/css" media="all">
+        <link rel="stylesheet" id="theme-skin-css" href="Assets/Lib/fa/css/all.css" type="text/css" media="all">
+        <style id="theme-skin-inline-css" type="text/css"></style>
+        <link rel="stylesheet" id="responsive-css" href="Assets/CSS/responsive.css" type="text/css" media="all">
+        <link rel="stylesheet" id="responsive-css" href="Assets/CSS/style.css" type="text/css" media="all">
+        <title>SimpleCircuit</title>
+
+        <!-- Babylon.js -->
+        <script src="Assets/JS/main/pep.min.js"></script>
+        <script src="Assets/JS/main/dat.gui.min.js"></script>
+        <script src="Assets/JS/main/ammo.js"></script>
+        <script src="Assets/JS/main/cannon.js"></script>
+        <script src="Assets/JS/main/Oimo.js"></script>
+        <script src="Assets/JS/main/earcut.min.js"></script>
+        <script src="Assets/JS/main/babylon.js"></script>
+        <script src="Assets/JS/main/babylonjs.materials.min.js"></script>
+        <script src="Assets/JS/main/babylonjs.proceduralTextures.min.js"></script>
+        <script src="Assets/JS/main/babylonjs.postProcess.min.js"></script>
+        <script src="Assets/JS/main/babylonjs.loaders.js"></script>
+        <script src="Assets/JS/main/babylonjs.serializers.min.js"></script>
+        <script src="Assets/JS/main/babylon.gui.min.js"></script>
+        <script src="Assets/JS/main/babylon.inspector.bundle.js"></script>
+
+        <style>
+            a{
+                text-align: right;
+                color: white;
+                padding: 0px;
+            }
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            output{
+                font-size: 20px;
+                color: black;
+                white-space: pre-wrap;
+                text-align: right;
+            }
+            #renderCanvas {
+                height: 100%;
+                width: 100%;
+                touch-action: none;
+            }
+            output{
+                text-align: right;
+            }
+        </style>
+    </head>
+<body class="container-fluid">
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar" class="order-last" class="img" style="background-image: url(Assets/Images/slider/6.jpg);">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+        </button>
+    </div>
+    <div id="cont" class="">
+              <h1><a href="Home.html" class="logo">التعلم عن بعد <span>علم أطفالك بطرق تفاعلية</span></a></h1>
+        <ul class="list-unstyled components">
+          <li class="active py-4">
+            <div class="d-flex justify-content-center">
+                <h2>التحكم بالمنبع <i class="fas fa-battery-full"></i></h2>
+            </div>
+            <div id="battrey" data-nbattrey="1" class="btn-group d-flex justify-content-center">
+                <button id="addbat" class="btn btn-light btn-lg">اضافة منبع</button>
+                <button id="deletebat" class="btn btn-light btn-lg">حذف منبع</button>
+            </div>
+          </li>
+          <li class="active py-4">
+            <div class="d-flex justify-content-center">
+                <h2> التحكم بالمصابيح <i class="fas fa-lightbulb"></i></h2>
+            </div>
+            <div id="lamp" data-nlamp="1" class="btn-group d-flex justify-content-center">
+                <button id="addlamp" class="btn btn-light btn-lg">اضافة مصباح</button>
+                <button id="deletelamp" class="btn btn-light btn-lg">حذف مصباح</button>
+            </div>
+          </li>
+        </ul>
+            <output id="result"></output>
+    </div>
+    </nav>
+    <div id="content">
+        <canvas id="renderCanvas"></canvas>
+    </div>
+</div>
+    
+    <script src="Assets/JS/vendor/jquery-1.11.3.min.js"></script>
+    <script src="Assets/JS/vendor/bootstrap.min.js"></script>
+    <script src="Assets/JS/vendor/jquery.ui.totop.js"></script>
+    <script src="Assets/Lib/fa/js/all.js"></script>
+    <script src="Assets/JS/vendor/mediaelement/mediaelement-and-player.min.js"></script>        
+    
+    <!--<script src="custom_tools/js/customizer.js"></script>-->
+    
+    <script type="text/javascript" src="Assets/JS/main/__packed.js"></script>
+    <script type="text/javascript" src="Assets/JS/main/shortcodes_init.min.js"></script>
+    <script type="text/javascript" src="Assets/JS/main/_main.js"></script>
+    <script type="text/javascript" src="Assets/JS/main/main.js"></script>
+    <script type="text/javascript" src="Assets/JS/main/popper.js"></script>
+    <script src="Assets/JS/vendor/jquery.elevateZoom-3.0.8.min.js"></script>
+    <script>
+       
+        var canvas = document.getElementById("renderCanvas");
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        
+                var engine;
+                var scene;
+                initFunction = async function() {   
+                    var battrey=document.getElementById("battrey");
+                    var numofbattrey=battrey.dataset.nbattrey;
+                    var lamp=document.getElementById("lamp");
+                    var numoflamp=lamp.dataset.nlamp;
+                    var battreys=parseInt(numofbattrey);
+                    var lamps=parseInt(numoflamp);            
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
+                        }
+                    }
+                    engine = await asyncEngineCreation();
+        if (!engine) throw 'engine should not be null.';
+        scene = createScene(battreys,lamps,engine,canvas);};
+        initFunction().then(() => {sceneToRender = scene        
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    const createScene = function (b,l,engine,canvas) {
+var btncolor = new BABYLON.Color4(0.1, 0.02, 0.02, 1);
+var battreycolor = new BABYLON.Color4(0.2, 0.2, 0.2, 1);
+var scene = new BABYLON.Scene(engine);
+var wall=new BABYLON.MeshBuilder.CreateBox("wall",{width:0.5,height:9,depth:12},scene)
+var camera = new BABYLON.ArcRotateCamera("cam", -Math.PI / 3, Math.PI / 3, 20, BABYLON.Vector3.Zero());
+var light = new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0, 1, 0), scene);
+var anchor = new BABYLON.TransformNode("");
+const button=BABYLON.MeshBuilder.CreateCylinder("btn",{height:0.5,diameter:1,faceColors:[btncolor,btncolor,btncolor,btncolor]});
+button.position.x=0;
+button.position.y=0.2;
+button.position.z=-5;
+wall.position.x=-9
+wall.position.y=2.5
+wall.position.z=0
+ring=BABYLON.Mesh.CreateTorus("ring",1.1,0.3,16,scene,true);
+ring.position.x=0
+ring.position.y=0
+ring.position.z=-5
+camera.wheelDeltaPercentage = 0.001;
+//camera.attachControl(canvas, true);
+camera.lowerRadiusLimit = 10;
+camera.upperRadiusLimit = 30;
+// Define a general environment texture
+// Create the 3D UI manager
+var manager = new BABYLON.GUI.GUI3DManager(scene);
+var panel = new BABYLON.GUI.CylinderPanel();
+panel.margin = 0.75;
+manager.addControl(panel);
+panel.linkToTransformNode(anchor);
+panel.position.z = -1.5;
+var path = [new BABYLON.Vector3(7, 0.7, 4), new BABYLON.Vector3(7, 0.1, 4), new BABYLON.Vector3(7, 0.1, 5), new BABYLON.Vector3(-7, 0.1, 5), new BABYLON.Vector3(-7, 0.1, -5), new BABYLON.Vector3(7, 0.1, -5), new BABYLON.Vector3(7, 0.1, -4), new BABYLON.Vector3(7, 0.7, -4),new BABYLON.Vector3(7, 0.7, 4)];
+var lamps=[];
+var lampbases=[];
+var battreys=[];
+var heads=[];
+var lights=[];
+var labels=[];
+var labels2=[];
+var label3;
+var advancedTexture=[];
+var advancedTexture2=[];
+var advancedTexture3;
+var btn=[];
+var btn2=[];
+var btn3;
+label3=new BABYLON.Mesh.CreatePlane("plane", 2);
+label3.parent=button
+label3.position.y=1.5;
+label3.rotation.y=-1
+btn3 = BABYLON.GUI.Button.CreateSimpleButton("Ekey", "مفتاح كهربائي");
+advancedTexture3=BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(label3);
+btn3.width = 1;
+    btn3.height = 0.4;
+    btn3.color = "green";
+    btn3.fontSize = 150;
+    btn3.background = "white";
+    btn3.onPointerUpObservable.add(function() {
+        alert("منبع جهد");
+    });
+    advancedTexture3.addControl(btn3);
+var cable = BABYLON.Mesh.CreateTube("TraceLine", path, 0.1, 12, null, 0, scene, true, BABYLON.Mesh.BILLBOARDMODE_ALL);
+var lampbasecolor = new BABYLON.Color4(0.67, 0.4, 0.14);
+const ground = BABYLON.MeshBuilder.CreateGround("ground", { height: 12, width: 17, subdivisions: 40 });
+var material = new BABYLON.StandardMaterial(scene);
+material.alpha = 1;
+material.diffuseColor = new BABYLON.Color3(0.91, 0.31, 0.02);
+var material2 = new BABYLON.StandardMaterial(scene);
+material2.diffuseColor = new BABYLON.Color3(1, 1, 1);
+material2.alpha=1
+var material3=new BABYLON.StandardMaterial(scene);
+material3.diffuseColor = new BABYLON.Color3(0.7, 0.7, 0.7);
+material3.alpha=0.8
+var material4 = new BABYLON.StandardMaterial(scene);
+material4.diffuseColor = new BABYLON.Color3(0.42, 0.29, 0.18);
+ground.material=material4;
+wall.material=material4
+cable.material = material;
+button.actionManager = new BABYLON.ActionManager(scene);
+for(i=0;i<b;i++){
+    battreys[i]=new BABYLON.MeshBuilder.CreateCylinder("btn"+i,{height:2,diameter:0.8,faceColors:[battreycolor,battreycolor,battreycolor,battreycolor]});
+    battreys[i].position.x=7
+    battreys[i].position.y=0.7
+    battreys[i].position.z=(2.5*(i))+((1-b)*1.25);
+    battreys[i].rotation.x=1.6;
+    heads[i]=new BABYLON.MeshBuilder.CreateCylinder("head"+i,{height:0.2,diameter:0.4,faceColors:[battreycolor,battreycolor,battreycolor,battreycolor]});
+    heads[i].position.x=7;
+    heads[i].position.y=0.7
+    heads[i].position.z=battreys[i].position.z+1.1
+    heads[i].rotation.x=1.6;
+    labels[i]=new BABYLON.Mesh.CreatePlane("plane"+i, 2);
+    labels[i].parent=heads[i];
+    labels[i].position.z=-2;
+    labels[i].rotation.x=-1.5
+    labels[i].rotation.z=0
+    advancedTexture[i] = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(labels[i]);
+    btn[i] = BABYLON.GUI.Button.CreateSimpleButton("but"+i, "مولد تيار");
+    btn[i].width = 1;
+    btn[i].height = 0.4;
+    btn[i].color = "green";
+    btn[i].fontSize = 150;
+    btn[i].background = "white";
+    btn[i].onPointerUpObservable.add(function() {
+        alert("منبع جهد");
+    });
+    advancedTexture[i].addControl(btn[i]);
+}
+for(i=0;i<l;i++){
+    lamps[i]=new BABYLON.MeshBuilder.CreateSphere("lamp"+i, {height: 1,diameter: 1.4,updatable:true })
+    lamps[i].position.x=-7
+    lamps[i].position.y=0.8
+    lamps[i].position.z=(2.5*(i))+((1-l)*1.25);
+    lamps[i].material=material3
+    lampbases[i]=new BABYLON.MeshBuilder.CreateCylinder("lampbase"+i, { height: 0.3, diameter: 1, faceColors: [lampbasecolor, lampbasecolor, lampbasecolor, lampbasecolor] })
+    lampbases[i].position.x=-7;
+    lampbases[i].position.y=0.1
+    lampbases[i].position.z=lamps[i].position.z
+    lights[i]=new BABYLON.PointLight("pointLight"+i, new BABYLON.Vector3(1, 10, 1), scene);
+    lights[i].position.x=-7;
+    lights[i].position.y=0.8;
+    lights[i].position.z=lamps[i].position.z;
+    lights[i].diffuse=new BABYLON.Color3(1, 1, 1);
+    lights[i].intensity=0;
+    labels2[i]=new BABYLON.Mesh.CreatePlane("lplane"+i, 2);
+    labels2[i].parent=lamps[i];
+    labels2[i].position.y=3;
+    labels2[i].rotation.y=-1.1
+    advancedTexture2[i] = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(labels2[i]);
+
+    btn2[i] = BABYLON.GUI.Button.CreateSimpleButton("lbut"+i, "مصباح كهربائي");
+    btn2[i].width = 1;
+    btn2[i].height = 0.4;
+    btn2[i].color = "green";
+    btn2[i].fontSize = 150;
+    btn2[i].background = "white";
+    btn2[i].onPointerUpObservable.add(function() {
+        alert("مصباح كهربائي");
+    });
+    advancedTexture2[i].addControl(btn2[i]);
+    
+    button.actionManager.registerAction(
+new BABYLON.SetValueAction(
+    BABYLON.ActionManager.OnPickDownTrigger,
+    lights[i],
+    'intensity',
+    (3*b)/l
+)
+);button.actionManager.registerAction(
+new BABYLON.SetValueAction(
+    BABYLON.ActionManager.OnPickDownTrigger,
+    lamps[i],
+    'material',
+   material2
+)
+);
+button.actionManager.registerAction(
+new BABYLON.SetValueAction(
+    BABYLON.ActionManager.OnPickUpTrigger,
+    lights[i],
+    'intensity',
+    0
+)
+);button.actionManager.registerAction(
+new BABYLON.SetValueAction(
+    BABYLON.ActionManager.OnPickUpTrigger,
+    lamps[i],
+    'material',
+   material3
+)
+);
+}
+ button.actionManager.registerAction(
+    new BABYLON.SetValueAction(
+    BABYLON.ActionManager.OnPickDownTrigger,
+    button,
+    'position.y',
+    0
+)
+);
+button.actionManager.registerAction(
+    new BABYLON.SetValueAction(
+    BABYLON.ActionManager.OnPickUpTrigger,
+    button,
+    'position.y',
+    0.2
+)
+);
+return scene;
+}
+        $(document).ready(function(){
+            $('#addlamp').on('click',function(){
+                var x=parseInt($('#lamp').attr('data-nlamp'))+1;
+                if(x<=3){
+                $('#lamp').attr('data-nlamp',x);
+                document.getElementById('result').value+='تمت اضافة مصباح جديد \n'
+                }
+                else{
+                    alert("Cant Add More Than 3 lamps");
+                }
+                scene.dispose();
+                initFunction().then(() => {sceneToRender = scene        
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
+            });
+            $('#deletelamp').on('click',function(){
+                var x=parseInt($('#lamp').attr('data-nlamp'))-1;
+                if(x>=1){
+                $('#lamp').attr('data-nlamp',x);
+                document.getElementById('result').value+='تم حذف مصباح \n '
+                }
+                else{
+                    alert("Cant Leave Less Than 1 lamps");
+                }
+                scene.dispose();
+                initFunction().then(() => {sceneToRender = scene        
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
+            });
+            $('#addbat').on('click',function(){
+                var x=parseInt($('#battrey').attr('data-nbattrey'))+1;
+                if(x<=3){
+                $('#battrey').attr('data-nbattrey',x);
+                document.getElementById('result').value+='تمت اضافة منبع جديد \n'
+                }
+                else{
+                    alert("Cant Add More Than 3 Battreys");
+                }
+                scene.dispose();
+                initFunction().then(() => {sceneToRender = scene        
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
+            });
+            $('#deletebat').on('click',function(){
+                var x=parseInt($('#battrey').attr('data-nbattrey'))-1;
+                if(x>=1){
+                $('#battrey').attr('data-nbattrey',x);
+                document.getElementById('result').value+='تم حذف منبع جديد \n'
+                }
+                else{
+                    alert("Cant Leave Less Than 1 Battreys");
+                }
+                scene.dispose();
+                initFunction().then(() => {sceneToRender = scene        
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
+            })
+        })
+        
+    </script>
+</body>
+</html>
